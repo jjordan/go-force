@@ -5,6 +5,7 @@ package force
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -19,7 +20,7 @@ const (
 )
 
 func Create(version, clientId, clientSecret, userName, password, securityToken,
-	environment string) (*ForceApi, error) {
+	environment string, httpClient *http.Client) (*ForceApi, error) {
 	oauth := &forceOauth{
 		clientId:      clientId,
 		clientSecret:  clientSecret,
@@ -27,6 +28,7 @@ func Create(version, clientId, clientSecret, userName, password, securityToken,
 		password:      password,
 		securityToken: securityToken,
 		environment:   environment,
+		httpClient:    httpClient,
 	}
 
 	forceApi := &ForceApi{
@@ -91,7 +93,8 @@ func CreateWithAccessToken(version, clientId, accessToken, instanceUrl string) (
 
 // Used when running tests.
 func createTest() *ForceApi {
-	forceApi, err := Create(testVersion, testClientId, testClientSecret, testUserName, testPassword, testSecurityToken, testEnvironment)
+	httpClient := http.DefaultClient
+	forceApi, err := Create(testVersion, testClientId, testClientSecret, testUserName, testPassword, testSecurityToken, testEnvironment, httpClient)
 	if err != nil {
 		fmt.Printf("Unable to create ForceApi for test: %v", err)
 		os.Exit(1)

@@ -1,12 +1,14 @@
+#box: wercker/golang
 box: darron/go-wercker
 # Build definition
 build:
   # The steps that will be executed on build
   steps:
-    # Sets the go workspace and places you package
+    - wercker/setup-go-workspace:
+        package-dir: github.com/jjordan/go-force
+    # Sets the go workspace and places your package
     # at the right place in the workspace tree
-    - setup-go-workspace
-
+#    - setup-go-workspace
     # Gets the dependencies
     - script:
         name: go get
